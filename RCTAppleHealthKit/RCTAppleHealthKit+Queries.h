@@ -51,6 +51,16 @@
                                          limit:(NSUInteger)lim
                                     completion:(void (^)(NSArray *, NSError *))completionHandler;
 
+- (void)fetchCumulativeSumStatisticsCollection:(HKQuantityType *)quantityType
+                                          unit:(HKUnit *)unit
+                                     startDate:(NSDate *)startDate
+                                       endDate:(NSDate *)endDate
+                                     ascending:(BOOL)asc
+                                         limit:(NSUInteger)lim
+                                  intervalType:(NSString *)intervalType
+                                      interval:(NSUInteger)intrVal
+                                    completion:(void (^)(NSArray *, NSError *))completionHandler;
+
 
 
 - (void)fetchSleepCategorySamplesForPredicate:(NSPredicate *)predicate

@@ -103,6 +103,8 @@
     BOOL ascending = [RCTAppleHealthKit boolFromOptions:input key:@"ascending" withDefault:false];
     NSDate *startDate = [RCTAppleHealthKit dateFromOptions:input key:@"startDate" withDefault:nil];
     NSDate *endDate = [RCTAppleHealthKit dateFromOptions:input key:@"endDate" withDefault:[NSDate date]];
+    NSString *intervalType = [RCTAppleHealthKit stringFromOptions:input key:@"intervalType" withDefault:nil];
+    NSInteger interval = [RCTAppleHealthKit uintFromOptions:input key:@"interval" withDefault:30];
     if(startDate == nil){
         callback(@[RCTMakeError(@"startDate is required in options", nil, nil)]);
         return;
@@ -110,20 +112,40 @@
 
     HKQuantityType *stepCountType = [HKObjectType quantityTypeForIdentifier:HKQuantityTypeIdentifierStepCount];
 
-    [self fetchCumulativeSumStatisticsCollection:stepCountType
-                                            unit:unit
-                                       startDate:startDate
-                                         endDate:endDate
-                                       ascending:ascending
-                                           limit:limit
-                                      completion:^(NSArray *arr, NSError *err){
-        if (err != nil) {
-            NSLog(@"error with fetchCumulativeSumStatisticsCollection: %@", err);
-            callback(@[RCTMakeError(@"error with fetchCumulativeSumStatisticsCollection", err, nil)]);
-            return;
-        }
-        callback(@[[NSNull null], arr]);
-    }];
+    if(intervalType != nil) {
+        [self fetchCumulativeSumStatisticsCollection:stepCountType
+                                                unit:unit
+                                           startDate:startDate
+                                             endDate:endDate
+                                           ascending:ascending
+                                               limit:limit
+                                        intervalType:intervalType
+                                            interval:interval
+                                          completion:^(NSArray *arr, NSError *err){
+                                              if (err != nil) {
+                                                  NSLog(@"error with fetchCumulativeSumStatisticsCollection: %@", err);
+                                                  callback(@[RCTMakeError(@"error with fetchCumulativeSumStatisticsCollection", err, nil)]);
+                                                  return;
+                                              }
+                                              callback(@[[NSNull null], arr]);
+                                          }];
+    }
+    else {
+        [self fetchCumulativeSumStatisticsCollection:stepCountType
+                                                unit:unit
+                                           startDate:startDate
+                                             endDate:endDate
+                                           ascending:ascending
+                                               limit:limit
+                                          completion:^(NSArray *arr, NSError *err){
+                                              if (err != nil) {
+                                                  NSLog(@"error with fetchCumulativeSumStatisticsCollection: %@", err);
+                                                  callback(@[RCTMakeError(@"error with fetchCumulativeSumStatisticsCollection", err, nil)]);
+                                                  return;
+                                              }
+                                              callback(@[[NSNull null], arr]);
+                                          }];
+    }
 }
 
 
